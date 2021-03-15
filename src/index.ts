@@ -1,5 +1,6 @@
 const CLOSE_ATTR = 'data-close-dialog'
 const CLOSE_SELECTOR = `[${CLOSE_ATTR}]`
+const PREVENT_SCROLL_ATTR = 'prevent-scroll'
 
 type Target = Disableable | Focusable
 
@@ -13,7 +14,7 @@ function autofocus(el: DetailsDialogElement): void {
     autofocusElement = el
     el.setAttribute('tabindex', '-1')
   }
-  autofocusElement.focus()
+  autofocusElement.focus({ preventScroll: el.hasAttribute(PREVENT_SCROLL_ATTR) })
 }
 
 function keydown(event: KeyboardEvent): void {
@@ -66,7 +67,7 @@ function restrictTabBehavior(event: KeyboardEvent): void {
     targetIndex = targetIndex % elements.length
   }
 
-  elements[targetIndex].focus()
+  elements[targetIndex].focus({ preventScroll: dialog.hasAttribute(PREVENT_SCROLL_ATTR) })
 }
 
 function allowClosingDialog(details: Element): boolean {
@@ -112,7 +113,7 @@ function toggle(event: Event): void {
       form.reset()
     }
     const focusElement = findFocusElement(details, dialog)
-    if (focusElement) focusElement.focus()
+    if (focusElement) focusElement.focus({ preventScroll: dialog.hasAttribute(PREVENT_SCROLL_ATTR) })
     ;(details as HTMLElement).removeEventListener('keydown', keydown)
   }
 }
